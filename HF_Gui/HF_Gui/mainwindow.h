@@ -2,23 +2,24 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include<remote_control.h>
-#include<receiver.h>
-#include<qtgui/dockfft.h>
+//#include<remote_control.h>
+//#include<receiver.h>
+//#include<qtgui/dockfft.h>
 #include <QTimer>
 #include<QPointer>
-#include<QAudioDeviceInfo>
-#include<ioconfig.h>
-#include"qtgui/dockaudio.h"
-#include"qtgui/dockinputctl.h"
-#include"dsp/afsk1200/cafsk12.h"
-#ifdef WITH_PULSEAUDIO
-#include "pulseaudio/pa_device_list.h"
-#elif WITH_PORTAUDIO
-#include "portaudio/device_list.h"
-#elif defined(GQRX_OS_MACX)
-#include "osxaudio/device_list.h"
-#endif
+//#include<QAudioDeviceInfo>
+//#include<ioconfig.h>
+//#include"qtgui/dockaudio.h"
+//#include"qtgui/dockinputctl.h"
+//#include"dsp/afsk1200/cafsk12.h"
+#include<QComboBox>
+//#ifdef WITH_PULSEAUDIO
+//#include "pulseaudio/pa_device_list.h"
+//#elif WITH_PORTAUDIO
+//#include "portaudio/device_list.h"
+//#elif defined(GQRX_OS_MACX)
+//#include "osxaudio/device_list.h"
+//#endif
 
 #define FILTER_PRESET_WIDE      0
 #define FILTER_PRESET_NORMAL    1
@@ -49,19 +50,19 @@ private:
     // Khai bao cac doi tuong
     /*****************************************************/
     bool mute_sound=false,Start_HF=false;
-    RemoteControl *remote;
-    receiver *rx;//doi tuong chua cac phuong thuc cai dat
+   // RemoteControl *remote;
+    //receiver *rx;//doi tuong chua cac phuong thuc cai dat
     QTimer   *meter_timer;
-    DockFft      *uiDockFft;
-    DockAudio *uiDockAudio;
-    DockInputCtl   *uiDockInputCtl;// Doi tuong dieu chinh Gain (IF,BF,RF) của may thu
+   // DockFft      *uiDockFft;
+   // DockAudio *uiDockAudio;
+   // DockInputCtl   *uiDockInputCtl;// Doi tuong dieu chinh Gain (IF,BF,RF) của may thu
     // DockFft        *uiDockFft;
     //QTimer   *iq_fft_timer
 
     std::map<QString, QVariant> devList;// luu tru list cac thiet bi audio
-    enum receiver::filter_shape d_filter_shape;
+  //  enum receiver::filter_shape d_filter_shape;
     QVarLengthArray<float, 16384> tmpbuf;
-    CAfsk12 *decoder;
+  //  CAfsk12 *decoder;
     /******************************************************/
     /*!< Application wide settings. */
 
@@ -157,14 +158,14 @@ public slots:
 signals :
     int SampleRateInputValuechange(int Samplerate);
 
-private:
-#ifdef WITH_PULSEAUDIO
-    vector<pa_device>           outDevList;
-#elif WITH_PORTAUDIO
-    vector<portaudio_device>    outDevList;
-#elif defined(GQRX_OS_MACX)
-    vector<osxaudio_device>     outDevList;
-#endif
+//private:
+//#ifdef WITH_PULSEAUDIO
+//    vector<pa_device>           outDevList;
+//#elif WITH_PORTAUDIO
+//    vector<portaudio_device>    outDevList;
+//#elif defined(GQRX_OS_MACX)
+//    vector<osxaudio_device>     outDevList;
+//#endif
 };
 
 

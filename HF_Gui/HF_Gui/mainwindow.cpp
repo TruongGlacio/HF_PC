@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QAudioDeviceInfo>
 #include<QMessageBox>
+#include<QDebug>
 static const int filter_preset_table[MainWindow::MODE_LAST][3][2] =
 {   //     WIDE             NORMAL            NARROW
     {{      0,      0}, {     0,     0}, {     0,     0}},  // MODE_OFF
@@ -24,14 +25,14 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     /* create dock widgets */
-    uiDockAudio = new DockAudio();
-    uiDockInputCtl = new DockInputCtl();
-    uiDockFft = new DockFft();
-    rx = new receiver("", "", 1);
-    rx->set_rf_freq(91000000.0f);
-    rx->set_filter_offset(0);
+   // uiDockAudio = new DockAudio();
+   // uiDockInputCtl = new DockInputCtl();
+   // uiDockFft = new DockFft();
+   // rx = new receiver("", "", 1);
+   // rx->set_rf_freq(91000000.0f);
+//    rx->set_filter_offset(0);
 
-    d_filter_shape = receiver::FILTER_SHAPE_NORMAL;
+   // d_filter_shape = receiver::FILTER_SHAPE_NORMAL;
 
     /* create receiver object */
 
@@ -53,12 +54,12 @@ MainWindow::MainWindow(QWidget *parent) :
         ModulationStrings.append("WFM (oirt)");
     }
     ui->Mode_band_comboBox->addItems(ModulationStrings);
-    ioconfig::getDeviceList(devList,ui->Deveice_Input_comboBox, ArrayinputDevevice);
-    qDebug() << "numberInput."<<ArrayinputDevevice->size();
+//    ioconfig::getDeviceList(devList,ui->Deveice_Input_comboBox, ArrayinputDevevice);
+//    qDebug() << "numberInput."<<ArrayinputDevevice->size();
 
-     getDevieceOutputAudio(NameDevieceOutput);
-    // remote controller
-    remote = new RemoteControl();
+//     getDevieceOutputAudio(NameDevieceOutput);
+//    // remote controller
+//    remote = new RemoteControl();
     /* meter timer */
     meter_timer = new QTimer(this);
     connect(meter_timer, SIGNAL(timeout()), this, SLOT(meterTimeout()));
@@ -93,28 +94,28 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->decimCombo,SIGNAL(currentIndexChanged(int)),this,SLOT(setDecimation(int)));
     //connect(ui->NB_AFC_radioButton,SIGNAL(bool isChecked()),ui->Statut_Noise_Bank_label,SLOT(bool setEnabled()));
 
-    connect(remote, SIGNAL(newMode(int)), this, SLOT(selectDemod(int)));
+   // connect(remote, SIGNAL(newMode(int)), this, SLOT(selectDemod(int)));
     connect(ui->Mode_band_comboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(selectDemod(int)));
-    connect(remote, SIGNAL(newPassband(int)), this, SLOT(setPassband(int)));
+ //   connect(remote, SIGNAL(newPassband(int)), this, SLOT(setPassband(int)));
     connect(ui->BandWidth_value_SpinBox_2,SIGNAL(valueChanged(int)),this,SLOT(setPassband(int)));
     connect(ui->Squech_value_verticalSlider_2,SIGNAL(valueChanged(int)),this,SLOT(setSquechvalue(int)));
     connect(ui->Deveice_Input_comboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(setInputdeviece(int)));
     connect(this,SIGNAL(SampleRateInputValuechange(int)),this,SLOT(setinputSampleRate(int)));
 
     // setup for DockinputCtl
-    connect(uiDockInputCtl, SIGNAL(gainChanged(QString, double)), this, SLOT(setGain(QString,double)));
-    connect(uiDockInputCtl, SIGNAL(autoGainChanged(bool)), this, SLOT(setAutoGain(bool)));
-    connect(uiDockInputCtl, SIGNAL(freqCorrChanged(double)), this, SLOT(setFreqCoruechr(double)));
-    connect(uiDockInputCtl, SIGNAL(iqSwapChanged(bool)), this, SLOT(setIqSwap(bool)));
-    connect(uiDockInputCtl, SIGNAL(dcCancelChanged(bool)), this, SLOT(setDcCancel(bool)));
-    connect(uiDockInputCtl, SIGNAL(iqBalanceChanged(bool)), this, SLOT(setIqBalance(bool)));
-    connect(uiDockInputCtl, SIGNAL(antennaSelected(QString)), this, SLOT(setAntenna(QString)));
-    connect(uiDockInputCtl, SIGNAL(iqBalanceChanged(bool)), this, SLOT(setIqBalance(bool)));
+//    connect(uiDockInputCtl, SIGNAL(gainChanged(QString, double)), this, SLOT(setGain(QString,double)));
+//    connect(uiDockInputCtl, SIGNAL(autoGainChanged(bool)), this, SLOT(setAutoGain(bool)));
+//    connect(uiDockInputCtl, SIGNAL(freqCorrChanged(double)), this, SLOT(setFreqCoruechr(double)));
+//    connect(uiDockInputCtl, SIGNAL(iqSwapChanged(bool)), this, SLOT(setIqSwap(bool)));
+//    connect(uiDockInputCtl, SIGNAL(dcCancelChanged(bool)), this, SLOT(setDcCancel(bool)));
+//    connect(uiDockInputCtl, SIGNAL(iqBalanceChanged(bool)), this, SLOT(setIqBalance(bool)));
+//    connect(uiDockInputCtl, SIGNAL(antennaSelected(QString)), this, SLOT(setAntenna(QString)));
+//    connect(uiDockInputCtl, SIGNAL(iqBalanceChanged(bool)), this, SLOT(setIqBalance(bool)));
 
     // Get list audio device to combobox
     connect(ui->Deveice_Output_Audio_comboBox,SIGNAL(currentIndexChanged(int)),this,SLOT(setAudioOutputDevice(int)));
-    connect(uiDockAudio, SIGNAL(audioStreamingStarted(QString,int)), this, SLOT(startAudioStream(QString,int)));
-    connect(uiDockAudio, SIGNAL(audioStreamingStopped()), this, SLOT(stopAudioStreaming()));
+//    connect(uiDockAudio, SIGNAL(audioStreamingStarted(QString,int)), this, SLOT(startAudioStream(QString,int)));
+//    connect(uiDockAudio, SIGNAL(audioStreamingStopped()), this, SLOT(stopAudioStreaming()));
     // Set gain AGC, Squech
     connect(ui->Volume_horizontalSlider,SIGNAL(valueChanged(int)),this,SLOT(setAudioGain(int)));
     connect(ui->AGC_Gain_value_verticalSlider,SIGNAL(valueChanged(int)),this,SLOT(setAgcGain(int)));
@@ -125,57 +126,57 @@ int idx=ui->Deveice_Output_Audio_comboBox->currentIndex();
 QString outdev;//=QString(outDevList[idx].get_name().c_str());
     // get list of audio output devices
 
-#ifdef WITH_PULSEAUDIO
-   pa_device_list devices;
-   outDevList = devices.get_output_devices();
+//#ifdef WITH_PULSEAUDIO
+//   pa_device_list devices;
+//   outDevList = devices.get_output_devices();
 
-   qDebug() << __FUNCTION__ << ": Available output devices:";
-   for (i = 0; i < outDevList.size(); i++)
-   {
-       qDebug() << "   " << i << ":" << QString(outDevList[i].get_description().c_str());
-       //qDebug() << "     " << QString(outDevList[i].get_name().c_str());
-       ui->Deveice_Output_Audio_comboBox->addItem(QString(outDevList[i].get_description().c_str()));
+//   qDebug() << __FUNCTION__ << ": Available output devices:";
+//   for (i = 0; i < outDevList.size(); i++)
+//   {
+//       qDebug() << "   " << i << ":" << QString(outDevList[i].get_description().c_str());
+//       //qDebug() << "     " << QString(outDevList[i].get_name().c_str());
+//       ui->Deveice_Output_Audio_comboBox->addItem(QString(outDevList[i].get_description().c_str()));
 
-       // note that item #i in devlist will be item #(i+1)
-       // in combo box due to "default"
-       if (outdev == QString(outDevList[i].get_name().c_str()))
-           ui->Deveice_Output_Audio_comboBox->setCurrentIndex(i);
-   }
-#elif WITH_PORTAUDIO
-   portaudio_device_list   devices;
+//       // note that item #i in devlist will be item #(i+1)
+//       // in combo box due to "default"
+//       if (outdev == QString(outDevList[i].get_name().c_str()))
+//           ui->Deveice_Output_Audio_comboBox->setCurrentIndex(i);
+//   }
+//#elif WITH_PORTAUDIO
+//   portaudio_device_list   devices;
 
-   outDevList = devices.get_output_devices();
-   for (i = 0; i < outDevList.size(); i++)
-   {
-       ui->Deveice_Output_Audio_comboBox->addItem(QString(outDevList[i].get_description().c_str()));
+//   outDevList = devices.get_output_devices();
+//   for (i = 0; i < outDevList.size(); i++)
+//   {
+//       ui->Deveice_Output_Audio_comboBox->addItem(QString(outDevList[i].get_description().c_str()));
 
-       // note that item #i in devlist will be item #(i+1)
-       // in combo box due to "default"
-       if (outdev == QString(outDevList[i].get_name().c_str()))
-           ui->Deveice_Output_Audio_comboBox->setCurrentIndex(i);
-   }
-   //ui->outDevCombo->setEditable(true);
+//       // note that item #i in devlist will be item #(i+1)
+//       // in combo box due to "default"
+//       if (outdev == QString(outDevList[i].get_name().c_str()))
+//           ui->Deveice_Output_Audio_comboBox->setCurrentIndex(i);
+//   }
+//   //ui->outDevCombo->setEditable(true);
 
-#elif defined(GQRX_OS_MACX)
-   osxaudio_device_list devices;
-   outDevList = devices.get_output_devices();
+//#elif defined(GQRX_OS_MACX)
+//   osxaudio_device_list devices;
+//   outDevList = devices.get_output_devices();
 
-   qDebug() << __FUNCTION__ << ": Available output devices:";
-   for (i = 0; i < outDevList.size(); i++)
-   {
-       qDebug() << "   " << i << ":" << QString(outDevList[i].get_name().c_str());
-       ui->Deveice_Output_Audio_comboBox->addItem(QString(outDevList[i].get_name().c_str()));
+//   qDebug() << __FUNCTION__ << ": Available output devices:";
+//   for (i = 0; i < outDevList.size(); i++)
+//   {
+//       qDebug() << "   " << i << ":" << QString(outDevList[i].get_name().c_str());
+//       ui->Deveice_Output_Audio_comboBox->addItem(QString(outDevList[i].get_name().c_str()));
 
-       // note that item #i in devlist will be item #(i+1)
-       // in combo box due to "default"
-       if (outdev == QString(outDevList[i].get_name().c_str()))
-           ui->Deveice_Output_Audio_comboBox->setCurrentIndex(i);
-   }
+//       // note that item #i in devlist will be item #(i+1)
+//       // in combo box due to "default"
+//       if (outdev == QString(outDevList[i].get_name().c_str()))
+//           ui->Deveice_Output_Audio_comboBox->setCurrentIndex(i);
+//   }
 
-#else
+//#else
 //   ui->Deveice_Output_Audio_comboBox->addItem(settings->value("output/device", "Default").toString(),settings->value("output/device", "Default").toString());
-  // ui->Deveice_Output_Audio_comboBox->setEditable(true);
-#endif // WITH_PULSEAUDIO
+//  // ui->Deveice_Output_Audio_comboBox->setEditable(true);
+//#endif // WITH_PULSEAUDIO
 getaudiooutput(ui->Deveice_Output_Audio_comboBox);
 
 }
@@ -239,8 +240,8 @@ emit SampleRateInputValuechange(Samplerate);
    }
 void MainWindow::setinputSampleRate(int SampleRateInput){
     double SampleRateInput_double=(double)SampleRateInput;
-    rx->set_input_rate(SampleRateInput_double);
-    qDebug() << "Configuration Sample Input :" << SampleRateInput_double;
+//    rx->set_input_rate(SampleRateInput_double);
+//    qDebug() << "Configuration Sample Input :" << SampleRateInput_double;
 
 }
 
@@ -249,8 +250,8 @@ void MainWindow::setinputSampleRate(int SampleRateInput){
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete rx;
-    delete uiDockInputCtl;
+//    delete rx;
+//    delete uiDockInputCtl;
 
 }
 
@@ -274,13 +275,13 @@ void MainWindow::on_AGC_radioButton_clicked()
     if(ui->AGC_radioButton->isChecked())
     {
         ui->Statut_AGC_label->setEnabled(true);
-        rx->set_agc_on(true);
+  //      rx->set_agc_on(true);
         ui->AGC_Gain_value_verticalSlider->setEnabled(true);
     }
     else
     {
         ui->Statut_AGC_label->setEnabled(false);
-        rx->set_agc_on(false);
+  //      rx->set_agc_on(false);
         ui->AGC_Gain_value_verticalSlider->setEnabled(false);
     }
 
@@ -348,14 +349,14 @@ void MainWindow::meterTimeout()
 {
     float level;
 
-    level = rx->get_signal_pwr(true);
+   // level = rx->get_signal_pwr(true);
   //  ui->sMeter->setLevel(level);
-    remote->setSignalLevel(level);
+   // remote->setSignalLevel(level);
 }
 void MainWindow::on_actionFFT_Setting_triggered()
 
 {
-    addDockWidget(Qt::RightDockWidgetArea, uiDockFft);
+   // addDockWidget(Qt::RightDockWidgetArea, uiDockFft);
 
 }
 
@@ -367,13 +368,13 @@ void MainWindow::on_Start_pushButton_clicked()
   //   rx->set_output_device("");
    // setFrequency_Center();
 
-    remote->setReceiverStatus(Start_HF);
+//    remote->setReceiverStatus(Start_HF);
 
     if (Start_HF)
     {
 
 
-        rx->start();
+     //   rx->start();
 
         ui->Start_pushButton->setText("Stop");
 
@@ -381,7 +382,7 @@ void MainWindow::on_Start_pushButton_clicked()
     else
     {
        // stop receiver
-        rx->stop();
+      //  rx->stop();
         ui->Start_pushButton->setText("Start");
     }
 }
@@ -395,15 +396,15 @@ void MainWindow::setNewFrequency(int rx_freq_int)
         rx_freq_int=rx_freq_int*1000;
         break;
     }
-    qint64 rx_freq=(qint64)rx_freq_int;
-    double hw_freq = (double)(rx_freq - d_lnb_lo) - rx->get_filter_offset();
-    qint64 center_freq = rx_freq - (qint64)rx->get_filter_offset();
+  //  qint64 rx_freq=(qint64)rx_freq_int;
+   // double hw_freq = (double)(rx_freq - d_lnb_lo) - rx->get_filter_offset();
+    //qint64 center_freq = rx_freq - (qint64)rx->get_filter_offset();
 
-    d_hw_freq = (qint64)hw_freq;
+   // d_hw_freq = (qint64)hw_freq;
 
     // set receiver frequency
-    rx->set_rf_freq(hw_freq);
-    qDebug() << "New Frequency:"<<hw_freq;
+//    rx->set_rf_freq(hw_freq);
+//    qDebug() << "New Frequency:"<<hw_freq;
 
     // update widgets
 }
@@ -419,15 +420,15 @@ void MainWindow::selectDemod(int mode_idx)
     // validate mode_idx
     if (mode_idx < 2)
     {
-        qDebug() << "Invalid mode index:" << mode_idx;
+      //  qDebug() << "Invalid mode index:" << mode_idx;
         mode_idx = 1;
     }
     //qDebug() << "New mode index:" << mode_idx;
 
  //   uiDockRxOpt->getFilterPreset(mode_idx, filter_preset, &flo, &fhi);
-    d_filter_shape = (receiver::filter_shape)ui->filter_shape_comboBox->currentIndex();
+  //  d_filter_shape = (receiver::filter_shape)ui->filter_shape_comboBox->currentIndex();
 
-    rds_enabled = rx->is_rds_decoder_active();
+    //rds_enabled = rx->is_rds_decoder_active();
   //  if (rds_enabled)
    //    setRdsDecoder(false);
    // uiDockRDS->setDisabled();
@@ -436,42 +437,42 @@ void MainWindow::selectDemod(int mode_idx)
 
     case 1:// NOt Mode
         /* Spectrum analyzer only */
-        if (rx->is_recording_audio())
-        {
-       //     stopAudioRec();
-            uiDockAudio->setAudioRecButtonState(false);
-        }
+//        if (rx->is_recording_audio())
+//        {
+//       //     stopAudioRec();
+//    //        uiDockAudio->setAudioRecButtonState(false);
+//        }
 
-        rx->set_demod(receiver::RX_DEMOD_OFF);
-       // rx->set_
-        click_res = 1000;
-        qDebug() << "New mode index:" << receiver::RX_DEMOD_OFF;
-        break;
+//        rx->set_demod(receiver::RX_DEMOD_OFF);
+//       // rx->set_
+//        click_res = 1000;
+//        qDebug() << "New mode index:" << receiver::RX_DEMOD_OFF;
+       break;
 
     case 2://Mode RAW
         /* Raw I/Q */
-        rx->set_demod(receiver::RX_DEMOD_NONE);
-     //   ui->plotter->setDemodRanges(-45000, -200, 200, 45000, true);
-        uiDockAudio->setFftRange(0,24000);
-        click_res = 100;
-        qDebug() << "New mode index:" << receiver::RX_DEMOD_NONE;
+//        rx->set_demod(receiver::RX_DEMOD_NONE);
+//     //   ui->plotter->setDemodRanges(-45000, -200, 200, 45000, true);
+//        uiDockAudio->setFftRange(0,24000);
+//        click_res = 100;
+//        qDebug() << "New mode index:" << receiver::RX_DEMOD_NONE;
         break;
 
     case 3://DockRxOpt::MODE_AM
-        rx->set_demod(receiver::RX_DEMOD_AM);
-      //  ui->plotter->setDemodRanges(-45000, -200, 200, 45000, true);
-        uiDockAudio->setFftRange(0,6000);
-        click_res = 100;
-        qDebug() << "New mode index:" << receiver::RX_DEMOD_AM;
+//        rx->set_demod(receiver::RX_DEMOD_AM);
+//      //  ui->plotter->setDemodRanges(-45000, -200, 200, 45000, true);
+//        uiDockAudio->setFftRange(0,6000);
+//        click_res = 100;
+//        qDebug() << "New mode index:" << receiver::RX_DEMOD_AM;
         break;
 
     case 4://DockRxOpt::MODE_NFM
-        rx->set_demod(receiver::RX_DEMOD_NFM);
-        click_res = 100;
-        qDebug() << "New mode index:" << receiver::RX_DEMOD_NFM;
+//        rx->set_demod(receiver::RX_DEMOD_NFM);
+//        click_res = 100;
+//        qDebug() << "New mode index:" << receiver::RX_DEMOD_NFM;
         /*maxdev = uiDockRxOpt->currentMaxdev();
         if (maxdev < 20000.0)
-        {   /** FIXME
+        {   // FIXME
             ui->plotter->setDemodRanges(-45000, -250, 250, 45000, true);
             uiDockAudio->setFftRange(0,6000);
         }
@@ -483,18 +484,18 @@ void MainWindow::selectDemod(int mode_idx)
         break;
 
     case 5://DockRxOpt::MODE_WFM_MONO:
-        rx->set_demod(receiver::RX_DEMOD_WFM_M);
-        qDebug() << "New mode index:" << receiver::RX_DEMOD_WFM_M;
+//        rx->set_demod(receiver::RX_DEMOD_WFM_M);
+//        qDebug() << "New mode index:" << receiver::RX_DEMOD_WFM_M;
         break;
 
   //  case DockRxOpt::MODE_WFM_STEREO:
     case 6://DockRxOpt::MODE_WFM_STEREO_OIRT
-        rx->set_demod(receiver::RX_DEMOD_WFM_S);
-        qDebug() << "New mode index:" << receiver::RX_DEMOD_WFM_S;
+//        rx->set_demod(receiver::RX_DEMOD_WFM_S);
+//        qDebug() << "New mode index:" << receiver::RX_DEMOD_WFM_S;
 
 
         /* Broadcast FM */
-        quad_rate = rx->get_input_rate();
+//        quad_rate = rx->get_input_rate();
         break;
 
      /*   if (quad_rate < 500.0e3)
@@ -504,8 +505,8 @@ void MainWindow::selectDemod(int mode_idx)
         uiDockAudio->setFftRange(0,24000);  /** FIXME: get audio rate from rx *
         click_res = 1000;*/
        case 7:
-        rx->set_demod(receiver::RX_DEMOD_WFM_S_OIRT);
-        qDebug() << "New mode index:" << receiver::RX_DEMOD_WFM_S_OIRT;
+//        rx->set_demod(receiver::RX_DEMOD_WFM_S_OIRT);
+//        qDebug() << "New mode index:" << receiver::RX_DEMOD_WFM_S_OIRT;
 
        // uiDockRDS->setEnabled();
     //    if (rds_enabled)
@@ -514,57 +515,57 @@ void MainWindow::selectDemod(int mode_idx)
 
     case 8:
         /* LSB */
-        rx->set_demod(receiver::RX_DEMOD_SSB);
-        qDebug() << "New mode index:" << receiver::RX_DEMOD_SSB;
-     //   ui->plotter->setDemodRanges(-40000, -100, -5000, 0, false);
-        uiDockAudio->setFftRange(0,3000);
+//        rx->set_demod(receiver::RX_DEMOD_SSB);
+//        qDebug() << "New mode index:" << receiver::RX_DEMOD_SSB;
+//     //   ui->plotter->setDemodRanges(-40000, -100, -5000, 0, false);
+//        uiDockAudio->setFftRange(0,3000);
         click_res = 100;
         break;
 
     case 9:
         /* USB */
-        rx->set_demod(receiver::RX_DEMOD_SSB);
-   //     ui->plotter->setDemodRanges(0, 5000, 100, 40000, false);
-        uiDockAudio->setFftRange(0,3000);
+//        rx->set_demod(receiver::RX_DEMOD_SSB);
+//   //     ui->plotter->setDemodRanges(0, 5000, 100, 40000, false);
+//        uiDockAudio->setFftRange(0,3000);
         click_res = 100;
         break;
 
     case 10://DockRxOpt::MODE_CWL
         /* CW-L */
-        rx->set_demod(receiver::RX_DEMOD_SSB);
-     //   cwofs = -uiDockRxOpt->getCwOffset();
-    //    ui->plotter->setDemodRanges(-5000, -100, 100, 5000, true);
-        uiDockAudio->setFftRange(0,1500);
+//        rx->set_demod(receiver::RX_DEMOD_SSB);
+//     //   cwofs = -uiDockRxOpt->getCwOffset();
+//    //    ui->plotter->setDemodRanges(-5000, -100, 100, 5000, true);
+//        uiDockAudio->setFftRange(0,1500);
         click_res = 10;
         break;
 
     case 11://DockRxOpt::MODE_CWU
         /* CW-U */
-        rx->set_demod(receiver::RX_DEMOD_SSB);
-   //     cwofs = uiDockRxOpt->getCwOffset();
-     //   ui->plotter->setDemodRanges(-5000, -100, 100, 5000, true);
-        uiDockAudio->setFftRange(0,1500);
+//        rx->set_demod(receiver::RX_DEMOD_SSB);
+//   //     cwofs = uiDockRxOpt->getCwOffset();
+//     //   ui->plotter->setDemodRanges(-5000, -100, 100, 5000, true);
+//        uiDockAudio->setFftRange(0,1500);
         click_res = 10;
         break;
 
     default:
-        qDebug() << "Unsupported mode selection (can't happen!): " << mode_idx;
+       // qDebug() << "Unsupported mode selection (can't happen!): " << mode_idx;
         flo = -5000;
         fhi = 5000;
         click_res = 100;
         break;
     }
 
-    qDebug() << "Filter preset for mode" << mode_idx << "LO:" << flo << "HI:" << fhi;
+  //  qDebug() << "Filter preset for mode" << mode_idx << "LO:" << flo << "HI:" << fhi;
  //   ui->plotter->setHiLowCutFrequencies(flo, fhi);
   //  ui->plotter->setClickResolution(click_res);
    // ui->plotter->setFilterClickResolution(click_res);
    // rx->set_filter((double)flo, (double)fhi, d_filter_shape);
-    rx->set_cw_offset(cwofs);
-    rx->set_sql_level((double)ui->Squech_value_verticalSlider_2->value());
+//    rx->set_cw_offset(cwofs);
+//    rx->set_sql_level((double)ui->Squech_value_verticalSlider_2->value());
 
-    remote->setMode(mode_idx);
-    remote->setPassband(flo, fhi);
+//    remote->setMode(mode_idx);
+//    remote->setPassband(flo, fhi);
 
   //  d_have_audio = (mode_idx != DockRxOpt::MODE_OFF);
 
@@ -607,7 +608,7 @@ void MainWindow::on_comboBox_activated(int index)
 {
     Q_UNUSED(index);
 
-    qDebug() << "New filter preset:" << ui->Filter_WidthcomboBox->currentText();
+  //  qDebug() << "New filter preset:" << ui->Filter_WidthcomboBox->currentText();
   //  qDebug() << "            shape:" << ui->filterShapeCombo->currentIndex();
     //emit demodSelected(ui->modeSelector->currentIndex());
 }
@@ -619,22 +620,22 @@ void MainWindow::setFilterParam(int lo, int hi)
     if (filter_index == FILTER_PRESET_USER)
     {
         float width_f;
-        width_f = fabs((hi-lo)/1000.f);
+        //width_f = fabs((hi-lo)/1000.f);
         ui->Filter_WidthcomboBox->setItemText(FILTER_PRESET_USER, QString("User (%1 k)").arg(width_f));
     }
 }
 void MainWindow::on_plotter_newFilterFreq(int low, int high)
 {
-    receiver::status retcode;
+//    receiver::status retcode;
 
-    /* parameter correctness will be checked in receiver class */
-    retcode = rx->set_filter((double) low, (double) high, d_filter_shape);
+//    /* parameter correctness will be checked in receiver class */
+//    retcode = rx->set_filter((double) low, (double) high, d_filter_shape);
 
-    /* Update filter range of plotter, in case this slot is triggered by
-     * switching to a bookmark */
-  //  ui->plotter->setHiLowCutFrequencies(low, high);
+//    /* Update filter range of plotter, in case this slot is triggered by
+//     * switching to a bookmark */
+//  //  ui->plotter->setHiLowCutFrequencies(low, high);
 
-    if (retcode == receiver::STATUS_OK)
+//    if (retcode == receiver::STATUS_OK)
         setFilterParam(low, high);
 }
 void MainWindow::setPassband(int bandwidth)
@@ -671,9 +672,9 @@ void MainWindow::setPassband(int bandwidth)
     {
         lo = hi - bandwidth;
     }
-    rx->set_analog_bandwidth(bandwidth);
-     qDebug() << __func__ << "New Bandwidth" << bandwidth;
-    remote->setPassband(lo, hi);
+//    rx->set_analog_bandwidth(bandwidth);
+//     qDebug() << __func__ << "New Bandwidth" << bandwidth;
+//    remote->setPassband(lo, hi);
 
     on_plotter_newFilterFreq(lo, hi);
 }
@@ -681,26 +682,26 @@ void MainWindow::getFilterPreset(int mode, int preset, int * lo, int * hi) const
 {
     if (mode < 0 || mode >= MODE_LAST)
     {
-        qDebug() << __func__ << ": Invalid mode:" << mode;
+      // qDebug() << __func__ << ": Invalid mode:" << mode;
         mode = MODE_AM;
     }
     else if (preset < 1 || preset > 3)
     {
-        qDebug() << __func__ << ": Invalid preset:" << preset;
+     //   qDebug() << __func__ << ": Invalid preset:" << preset;
         preset = FILTER_PRESET_NORMAL;
     }
     *lo = filter_preset_table[mode][preset][0];
     *hi = filter_preset_table[mode][preset][1];
 }
 void MainWindow::setSquechvalue(int SquechValue){
-    QSettings *settings;
+  //  QSettings *settings;
     SquechValue=ui->Squech_value_verticalSlider_2->value();
     // note: dBFS*10 as int
 
 
     double sql_lvl =(double) SquechValue;
-    qDebug() << __func__ << ": Squech Value:" << sql_lvl;
-    rx->set_sql_level(sql_lvl);
+//    qDebug() << __func__ << ": Squech Value:" << sql_lvl;
+//    rx->set_sql_level(sql_lvl);
     //qDebug() << __func__ << ": Squech Value:" << sql_lvl;
   //  if (sql_lvl > -150.0)
 
@@ -715,7 +716,7 @@ void MainWindow::decoderTimeout()
     float buffer[DATA_BUFFER_SIZE];
     unsigned int num;
 
-    rx->get_sniffer_data(&buffer[0], num);
+ //   rx->get_sniffer_data(&buffer[0], num);
         process_samples(&buffer[0], num);
 }
 void MainWindow::on_Recorder_radioButton_toggled(bool checked)
@@ -723,7 +724,7 @@ void MainWindow::on_Recorder_radioButton_toggled(bool checked)
 
     if (checked == true)
     {
-        qDebug() << "Starting RDS decoder.";
+      //  qDebug() << "Starting RDS decoder.";
       //  uiDockRDS->showEnabled();
     //    rx->start_rds_decoder();
      //   rx->reset_rds_parser();
@@ -731,7 +732,7 @@ void MainWindow::on_Recorder_radioButton_toggled(bool checked)
     }
     else
     {
-        qDebug() << "Stopping RDS decoder.";
+       // qDebug() << "Stopping RDS decoder.";
     //    uiDockRDS->showDisabled();
     //    rx->stop_rds_decoder();
       //  rds_timer->stop();
@@ -747,7 +748,7 @@ void MainWindow::process_samples(float *buffer, int length)
         tmpbuf.append(buffer[i]);
     }
 
-    decoder->demod(tmpbuf.data(), length);
+   // decoder->demod(tmpbuf.data(), length);
 
     /* clear tmpbuf and store "overlap" */
     tmpbuf.clear();
@@ -760,20 +761,19 @@ void MainWindow::process_samples(float *buffer, int length)
 void MainWindow::on_Deveice_Output_Audio_comboBox_currentIndexChanged(const QString &arg1)
 {
    NameDevieceOutput=ui->Deveice_Output_Audio_comboBox->currentText();
-    qDebug() << "Set audio output" << NameDevieceOutput;
-
+    //qDebug() << "Set audio output" << NameDevieceOutput;
 }
 void MainWindow::setFrequency_Center(){
     int Unit_number=ui->Frequency_Centrer_unit_valuecomboBox->currentIndex();
     switch (Unit_number) {
     case 0:
         Frequency_centrer_value=ui->Frequency_Centrer_horizontalSlider->value()* 1000000.00;
-        qDebug() << "Set Frequency Centrer" << Frequency_centrer_value;
+   //     qDebug() << "Set Frequency Centrer" << Frequency_centrer_value;
 
         break;
     case 1:
         Frequency_centrer_value=ui->Frequency_Centrer_horizontalSlider->value()*1000.00;
-        qDebug() << "Set Frequency Centrer" << Frequency_centrer_value;
+     //   qDebug() << "Set Frequency Centrer" << Frequency_centrer_value;
         break;
     default:
         break;
@@ -790,12 +790,12 @@ void MainWindow::on_Frequency_Step_value_SpinBox_valueChanged(int arg1)
     switch (number) {
     case 0:
         Frequency_Step=ui->Frequency_Step_value_SpinBox->value()*1000.0;
-        qDebug() << "Set Frequency Centrer Step" << Frequency_Step;
+      //  qDebug() << "Set Frequency Centrer Step" << Frequency_Step;
 
         break;
     case 1:
         Frequency_Step=ui->Frequency_Step_value_SpinBox->value()*1000000.0;
-        qDebug() << "Set Frequency Centrer Step" << Frequency_Step;
+    //    qDebug() << "Set Frequency Centrer Step" << Frequency_Step;
 
         break;
     default:
@@ -810,12 +810,12 @@ void MainWindow::on_BandWidth_value_SpinBox_2_valueChanged(int arg1)
         switch (number) {
         case 0:
             Frequency_bandwith=ui->BandWidth_value_SpinBox_2->value()*1000.0;
-            qDebug() << "Set Band Width Frequency" << Frequency_bandwith;
+        //    qDebug() << "Set Band Width Frequency" << Frequency_bandwith;
 
             break;
         case 1:
             Frequency_bandwith=ui->BandWidth_value_SpinBox_2->value()*1000000.0;
-            qDebug() << "Set Band Width Frequency" << Frequency_bandwith;
+       //     qDebug() << "Set Band Width Frequency" << Frequency_bandwith;
             break;
         default:
             break;
@@ -828,7 +828,7 @@ int i=ui->Deveice_Input_comboBox->currentIndex();
        DeveiceInput=ArrayinputDevevice->at(i-1);
           qDebug() << "Configure I/O devices."<<ArrayinputDevevice->at(i-1);
 
-       rx->set_input_device(DeveiceInput.toStdString());
+       //rx->set_input_device(DeveiceInput.toStdString());
    //    std::vector<std::string> antennas = rx->get_antennas();
       // uiDockInputCtl->setAntennas(antennas);
     //   rx->set_antenna(antennas);
@@ -843,81 +843,81 @@ void MainWindow::on_Sample_Rate_Input_comboBox_currentIndexChanged(int index)
 void MainWindow::setAudioGain(int valueint)
 {
    float value=(float)valueint;
-    rx->set_af_gain(value);
-    qDebug() << "Configure Audio Gain."<<value;
+    //rx->set_af_gain(value);
+ //   qDebug() << "Configure Audio Gain."<<value;
 
 }
 void MainWindow::SetupforDockInputCtl(){
     // Add available antenna connectors to the UI
-    std::vector<std::string> antennas = rx->get_antennas();
-    uiDockInputCtl->setAntennas(antennas);
+//    std::vector<std::string> antennas = rx->get_antennas();
+//    uiDockInputCtl->setAntennas(antennas);
 
     updateGainStages(true);
 
 }
 void MainWindow::updateGainStages(bool read_from_device)
 {
-    gain_list_t gain_list;
-    std::vector<std::string> gain_names = rx->get_gain_names();
-    gain_t gain;
+  //  gain_list_t gain_list;
+    //std::vector<std::string> gain_names = rx->get_gain_names();
+ //   gain_t gain;
 
     std::vector<std::string>::iterator it;
-    for (it = gain_names.begin(); it != gain_names.end(); ++it)
-    {
-        gain.name = *it;
-        rx->get_gain_range(gain.name, &gain.start, &gain.stop, &gain.step);
-        if (read_from_device)
-        {
-            gain.value = rx->get_gain(gain.name);
-        }
-        else
-        {
-            gain.value = gain.stop;
-            rx->set_gain(gain.name, gain.value);
-     //       qDebug() << "Set Gain Stages"<<gain.name;
-         //   qDebug() <<":"<<gain.name;
-            qDebug() <<"SetGain Stages"<<gain.value;
+//    for (it = gain_names.begin(); it != gain_names.end(); ++it)
+//    {
+//        gain.name = *it;
+//        rx->get_gain_range(gain.name, &gain.start, &gain.stop, &gain.step);
+//        if (read_from_device)
+//        {
+//            gain.value = rx->get_gain(gain.name);
+//        }
+//        else
+//        {
+//            gain.value = gain.stop;
+//            rx->set_gain(gain.name, gain.value);
+//     //       qDebug() << "Set Gain Stages"<<gain.name;
+//         //   qDebug() <<":"<<gain.name;
+//            qDebug() <<"SetGain Stages"<<gain.value;
 
 
-        }
-        gain_list.push_back(gain);
-    }
+//        }
+//        gain_list.push_back(gain);
+//    }
 
-    uiDockInputCtl->setGainStages(gain_list);
+//    uiDockInputCtl->setGainStages(gain_list);
 }
 void MainWindow::setGain(QString name, double gain)
 {
-    rx->set_gain(name.toStdString(), gain);
+   // rx->set_gain(name.toStdString(), gain);
 }
 void MainWindow::setAutoGain(bool enabled)
 {
-    rx->set_auto_gain(enabled);
+   // rx->set_auto_gain(enabled);
 
 }
 
 /** Enable/disable I/Q reversion. */
 void MainWindow::setIqSwap(bool reversed)
 {
-    rx->set_iq_swap(reversed);
+ //   rx->set_iq_swap(reversed);
 }
 /** Enable/disable automatic DC removal. */
 void MainWindow::setDcCancel(bool enabled)
 {
-    rx->set_dc_cancel(enabled);
+ //   rx->set_dc_cancel(enabled);
 }
 
 /** Enable/disable automatic IQ balance. */
 void MainWindow::setIqBalance(bool enabled)
 {
-    rx->set_iq_balance(enabled);
+  //  rx->set_iq_balance(enabled);
 }
 /** Select new antenna connector. */
 void MainWindow::setAntenna(const QString antenna)
 {
-    qDebug() << "New antenna selected:" << antenna;
+   // qDebug() << "New antenna selected:" << antenna;
   //  std::vector<std::string> antennas = rx->get_antennas();
    // uiDockInputCtl->setAntennas(antennas);
-    rx->set_antenna(antenna.toStdString());
+   // rx->set_antenna(antenna.toStdString());
 }
 
 
@@ -984,7 +984,7 @@ void MainWindow::setDecimation(int Decimation_index){
 
 
     }
-    rx->set_input_decim(Decimation);
+  //  rx->set_input_decim(Decimation);
    // qDebug() << "New Decimation" << Decimation;
 
 }
@@ -993,39 +993,39 @@ void MainWindow::on_Show_dockinput_control_checkBox_toggled(bool checked)
 {
     if(checked==true)
     {
-        addDockWidget(Qt::RightDockWidgetArea, uiDockInputCtl);
-        uiDockInputCtl->show();
+        //addDockWidget(Qt::RightDockWidgetArea, uiDockInputCtl);
+     //   uiDockInputCtl->show();
 
     }
     else {
        // removeDockWidget(uiDockInputCtl);
-        uiDockInputCtl->hide();
+       // uiDockInputCtl->hide();
 
     }
 }
 void MainWindow::setAudioOutputDevice(int index){
     if(index==0 || index==1)
     {
-        rx->set_output_device("");
+     //   rx->set_output_device("");
     }
     else if (index>=2) {
-        rx->set_output_device(ui->Deveice_Output_Audio_comboBox->currentText().toStdString());
+     //   rx->set_output_device(ui->Deveice_Output_Audio_comboBox->currentText().toStdString());
     }
     ui->Deveice_Output_Audio_comboBox->setDisabled(true);
 }
 /** Start streaming audio over UDP. */
 void MainWindow::startAudioStream(const QString udp_host, int udp_port)
 {
-    rx->start_udp_streaming(udp_host.toStdString(), udp_port);
+  //  rx->start_udp_streaming(udp_host.toStdString(), udp_port);
 }
 
 /** Stop streaming audio over UDP. */
 void MainWindow::stopAudioStreaming()
 {
-    rx->stop_udp_streaming();
+   // rx->stop_udp_streaming();
 }
 /** AGC manual gain changed. */
 void MainWindow::setAgcGain(int gain)
 {
-    rx->set_agc_manual_gain(gain);
+   // rx->set_agc_manual_gain(gain);
 }
